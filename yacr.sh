@@ -258,7 +258,7 @@ package_chart() {
     chart_folder=$(echo -n "$chart" | cut -d'/' -f 2)
     package_charts=$(ls .yacr-release-packages | grep $chart_folder)
     for package_chart in "${package_charts[@]}"; do
-        curl -u "$JFROG_USERNAME:$JFROG_PASSWORD" -T "$package_chart" "$JFROG_URL/$chart_folder/$package_chart"
+        curl -u "$JFROG_USERNAME:$JFROG_PASSWORD" -T ".yacr-release-packages/$package_chart" "$JFROG_URL/$chart_folder/$package_chart"
     done
 }
 
