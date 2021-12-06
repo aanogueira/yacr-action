@@ -46,6 +46,9 @@ main() {
     parse_command_line "$@"
 
     : "${YACR_TOKEN:?Environment variable YACR_TOKEN must be set}"
+    : "${JFROG_URL:?Environment variable JFROG_PASSWORD must be set}"
+    : "${JFROG_USERNAME:?Environment variable JFROG_USERNAME must be set}"
+    : "${JFROG_PASSWORD:?Environment variable JFROG_PASSWORD must be set}"
 
     local repo_root
     repo_root=$(git rev-parse --show-toplevel)
@@ -252,6 +255,11 @@ package_chart() {
 
     echo "Packaging chart '$chart'..."
     yacr package "${args[@]}"
+    chart_folder=$(echo -n "$chart" | cut -d'/' -f 2)
+    package_charts=$(ls .yacr-release-packages | grep $chart_folder)
+    for package_chart in "${package_charts[@]}"; do
+        curl -u "$JFROG_USERNAME:$JFROG_PASSWORD" -T "$package_chart" "$JFROG_URL/$chart_folder/$package_chart"
+    done
 }
 
 release_charts() {
