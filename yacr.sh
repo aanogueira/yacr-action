@@ -210,7 +210,7 @@ install_chart_releaser() {
 
         echo "Installing helm..."
         curl -fsSL -o "$cache_dir"/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-        chmod 700 get_helm.sh
+        chmod 700 "$cache_dir/get_helm.sh"
         "$cache_dir/get_helm.sh"
 
         echo 'Adding yacr directory to PATH...'
