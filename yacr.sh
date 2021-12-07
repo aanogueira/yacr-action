@@ -208,6 +208,11 @@ install_chart_releaser() {
         tar -xzf yacr.tar.gz -C "$cache_dir"
         rm -f yacr.tar.gz
 
+        echo "Installing helm..."
+        curl -fsSL -o "$cache_dir"/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        "$cache_dir/get_helm.sh"
+
         echo 'Adding yacr directory to PATH...'
         export PATH="$cache_dir:$PATH"
     fi
@@ -252,6 +257,9 @@ package_chart() {
     if [[ -n "$config" ]]; then
         args+=(--config "$config")
     fi
+
+    echo "Validating chart '$chart'..."
+    helm lint $chart -f $chart/values.yaml --strict --debug
 
     echo "Packaging chart '$chart'..."
     yacr package "${args[@]}"
